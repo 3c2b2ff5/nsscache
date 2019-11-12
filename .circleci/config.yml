@@ -19,9 +19,9 @@ jobs:
       - run: export PATH=$PATH:$(python -m site --user-base)/bin
       - python/save-cache
       - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
-      - run:
-          command: coveralls
-          when: always
+      #- run:
+      #    command: coveralls
+      #    when: always
       - store_test_results:
           path: test-results
       - store_artifacts:
@@ -32,6 +32,7 @@ jobs:
       - run: pip install --user .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
+      - run: sudo tests/samba.sh
       - run:
           command: yapf --diff --recursive nss_cache nsscache
           no_output_timeout: 20m
