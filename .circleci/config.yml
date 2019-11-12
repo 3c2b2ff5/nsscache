@@ -36,6 +36,7 @@ jobs:
           command: yapf --diff --recursive nss_cache nsscache
           no_output_timeout: 20m
       - run: pylint nsscache nss_cache || true
+  build_samba:
     docker:
       - image: circleci/python:buster
     steps:
@@ -61,3 +62,4 @@ workflows:
   build:
     jobs:
       - build
+      - build_samba
