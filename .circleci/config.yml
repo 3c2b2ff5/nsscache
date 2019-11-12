@@ -33,7 +33,6 @@ jobs:
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
       - run: sudo tests/samba.sh
-      - run:
           command: yapf --diff --recursive nss_cache nsscache
           no_output_timeout: 20m
       - run: pylint nsscache nss_cache || true

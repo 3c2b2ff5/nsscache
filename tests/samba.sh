@@ -9,7 +9,6 @@ PACKAGES=(
 'samba-dsdb-modules'
 'samba-vfs-modules'
 'winbind'
-'heimdal-clients'
 )
 
 # Install needed packages
@@ -25,7 +24,7 @@ service samba-ad-dc stop
 
 # Domain provision
 rm -fr /etc/samba/smb.conf
-/usr/bin/samba-tool domain provision --realm=LOCAL.DOMAIN --domain=LOCAL --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass='4dm1n_s3cr36_v3ry_c0mpl3x' --use-rfc2307 --with-ntvfs-fileserver -d 1
+/usr/bin/samba-tool domain provision --realm=LOCAL.DOMAIN --domain=LOCAL --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass='4dm1n_s3cr36_v3ry_c0mpl3x' --use-rfc2307 --use-ntvfs
 
 # Start samba-ad-dc service only
 rm -fr /etc/systemd/system/samba-ad-dc.service
