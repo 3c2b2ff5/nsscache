@@ -25,7 +25,7 @@ service samba-ad-dc stop
 
 # Domain provision
 rm -fr /etc/samba/smb.conf
-/usr/bin/samba-tool domain provision --realm=LOCAL.DOMAIN --domain=LOCAL --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass='4dm1n_s3cr36_v3ry_c0mpl3x' --use-rfc2307 -d 1
+/usr/bin/samba-tool domain provision --realm=LOCAL.DOMAIN --domain=LOCAL --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass='4dm1n_s3cr36_v3ry_c0mpl3x' --use-rfc2307 --with-ntvfs-fileserver -d 1
 
 # Start samba-ad-dc service only
 rm -fr /etc/systemd/system/samba-ad-dc.service
