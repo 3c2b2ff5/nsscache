@@ -9,7 +9,7 @@ jobs:
       name: "python/default"
       tag: "3.7"
     steps:
-      - run: mount -o remount,acl /
+      - run: sudo mount -o remount,acl /
       - checkout
       # Install C libraries before pip install.
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
