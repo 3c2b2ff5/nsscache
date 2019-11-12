@@ -9,7 +9,6 @@ jobs:
       name: "python/default"
       tag: "3.7"
     steps:
-      - run: sudo mount -o remount,acl /
       - checkout
       # Install C libraries before pip install.
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
@@ -33,6 +32,7 @@ jobs:
       - run: pip install --user .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
+      - run: sudo mount -o remount,acl /
       - run: sudo tests/samba.sh
       - run:
           command: yapf --diff --recursive nss_cache nsscache
