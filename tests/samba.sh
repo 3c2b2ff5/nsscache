@@ -48,11 +48,9 @@ apt-get -y install \
     python-dbg \
     python-dev \
     python-dnspython \
-    python-gpgme \
     python-markdown \
     python3-dev \
     python3-dnspython \
-    python3-gpgme \
     python3-markdown \
     python3-dbg \
     xsltproc \
