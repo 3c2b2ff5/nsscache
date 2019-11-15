@@ -41,7 +41,7 @@ jobs:
       - image: laslabs/alpine-samba-dc:0.1.0
     steps:
       - checkout
-      - run: docker run -d --restart unless-stopped -e SAMBA_DC_REALM='corp.example.net' e SAMBA_DC_DOMAIN='EXAMPLE' -e SAMBA_DC_ADMIN_PASSWD='5u3r53cur3!' -e SAMBA_DC_DNS_BACKEND='SAMBA_INTERNAL' -v ${PWD}/samba:/samba 'laslabs/alpine-samba-dc:0.1.0'
+      # Install C libraries before pip install.
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
       - python/load-cache
       - python/install-deps
@@ -50,7 +50,18 @@ jobs:
       - run: export PATH=$PATH:$(python -m site --user-base)/bin
       - python/save-cache
       - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+      #- run:
+      #    command: coveralls
+      #    when: always
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+          destination: tr1
+      - store_artifacts:
+          path: htmlcov
       - run: pip install --user .
+      - run: docker run -d --restart unless-stopped -e SAMBA_DC_REALM='corp.example.net' e SAMBA_DC_DOMAIN='EXAMPLE' -e SAMBA_DC_ADMIN_PASSWD='5u3r53cur3!' -e SAMBA_DC_DNS_BACKEND='SAMBA_INTERNAL' -v ${PWD}/samba:/samba 'laslabs/alpine-samba-dc:0.1.0'
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
       - run:
