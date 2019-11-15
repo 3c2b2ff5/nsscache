@@ -78,4 +78,4 @@ workflows:
   build:
     jobs:
       - build
-      #- build_samba
+      - build_samba
