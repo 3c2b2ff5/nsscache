@@ -1,20 +1,119 @@
 #!/bin/bash -eux
 
+set -xueo pipefail
+
 export DEBIAN_FRONTEND=noninteractive
+apt-get -y update
 
-apt-get update
+apt-get -y install \
+    acl \
+    apt-utils \
+    attr \
+    autoconf \
+    binutils \
+    bison \
+    build-essential \
+    curl \
+    debhelper \
+    dnsutils \
+    docbook-xml \
+    docbook-xsl \
+    flex \
+    gcc \
+    gdb \
+    git \
+    glusterfs-common \
+    gzip \
+    heimdal-multidev \
+    hostname \
+    htop \
+    krb5-config \
+    krb5-kdc \
+    krb5-user \
+    lcov \
+    libacl1-dev \
+    libaio-dev \
+    libarchive-dev \
+    libattr1-dev \
+    libavahi-common-dev \
+    libblkid-dev \
+    libbsd-dev \
+    libcap-dev \
+    libcephfs-dev \
+    libcups2-dev \
+    libdbus-1-dev \
+    libglib2.0-dev \
+    libgnutls28-dev \
+    libgpgme11-dev \
+    libicu-dev \
+    libjansson-dev \
+    libjs-jquery \
+    libjson-perl \
+    libkrb5-dev \
+    libldap2-dev \
+    liblmdb-dev \
+    libncurses5-dev \
+    libpam0g-dev \
+    libparse-yapp-perl \
+    libpcap-dev \
+    libpopt-dev \
+    libreadline-dev \
+    libsystemd-dev \
+    libtasn1-bin \
+    libtasn1-dev \
+    libunwind-dev \
+    lmdb-utils \
+    locales \
+    lsb-release \
+    make \
+    mawk \
+    mingw-w64 \
+    patch \
+    perl \
+    perl-modules \
+    pkg-config \
+    procps \
+    psmisc \
+    python3 \
+    python3-crypto \
+    python3-dbg \
+    python3-dev \
+    python3-dnspython \
+    python3-gpg \
+    python3-iso8601 \
+    python3-markdown \
+    python3-matplotlib \
+    python3-pexpect \
+    rng-tools \
+    rsync \
+    sed \
+    sudo \
+    tar \
+    tree \
+    uuid-dev \
+    xfslibs-dev \
+    xsltproc \
+    zlib1g-dev
 
-PACKAGES=(
-'samba'
-'samba-dsdb-modules'
-'samba-vfs-modules'
-'winbind'
-)
+apt-get -y autoremove
+apt-get -y autoclean
+apt-get -y clean
 
-# Install needed packages
-for package in "${PACKAGES[@]}"; do
-    apt-get -y install "$package"
-done
+wget --no-check-certificate https://download.samba.org/pub/samba/stable/samba-4.11.2.tar.gz
+tar -zxf samba-4.11.2.tar.gz
+cd samba-4.11.2/
+./configure
+    --with-ntvfs-fileserver  \
+    --sysconfdir=/etc/samba/ \
+    --mandir=/usr/share/man/ \
+    --sbindir=/usr/sbin/     \
+    --bindir=/usr/bin/       \
+    --without-systemd        \
+    --with-statedir=/var/lib/samba \
+    --with-cachedir=/var/cache/samba \
+    --with-privatedir=/var/lib/samba/private \
+
+make && make install
 
 # Samba must not be running during the provisioning
 service smbd stop
