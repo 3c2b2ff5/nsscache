@@ -32,7 +32,25 @@ jobs:
       - run: pip install --user .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
-      - run: sudo tests/samba.sh
+      - run:
+          command: yapf --diff --recursive nss_cache nsscache
+          no_output_timeout: 20m
+      - run: pylint nsscache nss_cache || true
+  build_samba:
+    docker:
+      - image: laslabs/alpine-samba-dc:0.1.0
+    steps:
+      - checkout
+      - run: docker run -d --restart unless-stopped -e SAMBA_DC_REALM='corp.example.net' e SAMBA_DC_DOMAIN='EXAMPLE' -e SAMBA_DC_ADMIN_PASSWD='5u3r53cur3!' -e SAMBA_DC_DNS_BACKEND='SAMBA_INTERNAL' -v ${PWD}/samba:/samba 'laslabs/alpine-samba-dc:0.1.0'
+      - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
+      - python/load-cache
+      - python/install-deps
+      # CI-only deps, not in requirements.txt
+      - run: pip install --user python-coveralls yapf pylint
+      - run: export PATH=$PATH:$(python -m site --user-base)/bin
+      - python/save-cache
+      - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+      - run: pip install --user .
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
       - run:
@@ -45,3 +63,4 @@ workflows:
   build:
     jobs:
       - build
+      - build_samba
