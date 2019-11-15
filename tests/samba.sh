@@ -63,8 +63,9 @@ apt-get -y clean
 wget --no-check-certificate https://download.samba.org/pub/samba/stable/samba-4.11.2.tar.gz
 tar -zxf samba-4.11.2.tar.gz
 cd samba-4.11.2/
-./configure
-    --without-systemd        \
+./configure \
+    --without-systemd \
+    --with-ntvfs-fileserver \
     --with-configdir=/etc/samba/ \
     --with-privatedir=/var/lib/samba/private \
 
