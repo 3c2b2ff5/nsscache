@@ -87,23 +87,23 @@ rm -fr /etc/systemd/system/samba-ad-dc.service
 service samba-ad-dc start
 
 # Add users and groups
-/usr/bin/samba-tool user create user1 --use-username-as-cn --surname=Test1 --given-name=User1 --random-password
-/usr/bin/samba-tool user create user2 --use-username-as-cn --surname=Test2 --given-name=User2 --random-password
-/usr/bin/samba-tool user create user3 --use-username-as-cn --surname=Test3 --given-name=User3 --random-password
-/usr/bin/samba-tool user create user4 --use-username-as-cn --surname=Test4 --given-name=User4 --random-password
-/usr/bin/samba-tool user create user5 --use-username-as-cn --surname=Test5 --given-name=User5 --random-password
+$(which samba-tool) user create user1 --use-username-as-cn --surname=Test1 --given-name=User1 --random-password
+$(which samba-tool) user create user2 --use-username-as-cn --surname=Test2 --given-name=User2 --random-password
+$(which samba-tool) user create user3 --use-username-as-cn --surname=Test3 --given-name=User3 --random-password
+$(which samba-tool) user create user4 --use-username-as-cn --surname=Test4 --given-name=User4 --random-password
+$(which samba-tool) user create user5 --use-username-as-cn --surname=Test5 --given-name=User5 --random-password
 
 # Add some groups
-/usr/bin/samba-tool group add IT
-/usr/bin/samba-tool group add Admins
-/usr/bin/samba-tool group add Devs
-/usr/bin/samba-tool group add DevOps
+$(which samba-tool) group add IT
+$(which samba-tool) group add Admins
+$(which samba-tool) group add Devs
+$(which samba-tool) group add DevOps
 
 # Create members
-/usr/bin/samba-tool group addmembers IT Admins,Devs,DevOps,user1
-/usr/bin/samba-tool group addmembers Admins user2,user3
-/usr/bin/samba-tool group addmembers Devs user4
-/usr/bin/samba-tool group addmembers DevOps user5
+$(which samba-tool) group addmembers IT Admins,Devs,DevOps,user1
+$(which samba-tool) group addmembers Admins user2,user3
+$(which samba-tool) group addmembers Devs user4
+$(which samba-tool) group addmembers DevOps user5
 
 # Add AD certificate
 echo -n | openssl s_client -connect localhost:636 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > /usr/local/share/ca-certificates/ad.crt
