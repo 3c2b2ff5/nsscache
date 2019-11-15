@@ -64,13 +64,8 @@ wget --no-check-certificate https://download.samba.org/pub/samba/stable/samba-4.
 tar -zxf samba-4.11.2.tar.gz
 cd samba-4.11.2/
 ./configure
-    --sysconfdir=/etc/samba/ \
-    --mandir=/usr/share/man/ \
-    --sbindir=/usr/sbin/     \
-    --bindir=/usr/bin/       \
     --without-systemd        \
-    --with-statedir=/var/lib/samba \
-    --with-cachedir=/var/cache/samba \
+    --with-configdir=/etc/samba/ \
     --with-privatedir=/var/lib/samba/private \
 
 make && make install
