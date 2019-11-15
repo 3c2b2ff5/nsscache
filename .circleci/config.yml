@@ -36,7 +36,7 @@ jobs:
           command: yapf --diff --recursive nss_cache nsscache
           no_output_timeout: 20m
       - run: pylint nsscache nss_cache || true
-  build_samba:
+  #build_samba:
     docker:
       - image: laslabs/alpine-samba-dc:0.1.0
     steps:
@@ -74,4 +74,4 @@ workflows:
   build:
     jobs:
       - build
-      - build_samba
+      #- build_samba
