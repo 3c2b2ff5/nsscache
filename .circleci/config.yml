@@ -10,8 +10,6 @@ jobs:
       tag: "3.7"
     steps:
       - checkout
-      - run: /sbin/tune2fs -o +acl /dev/nvme1n1p1
-      - run: df -h
       # Install C libraries before pip install.
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
       - python/load-cache
