@@ -64,6 +64,7 @@ wget --no-check-certificate https://download.samba.org/pub/samba/stable/samba-4.
 tar -zxf samba-4.11.2.tar.gz
 cd samba-4.11.2/
 ./configure \
+    --with-winbind \
     --without-systemd \
     --with-ntvfs-fileserver \
     --with-configdir=/etc/samba/ \
@@ -72,10 +73,10 @@ cd samba-4.11.2/
 make && make install
 
 # Samba must not be running during the provisioning
-service smbd stop
-service nmbd stop 
-service winbind stop
-service samba-ad-dc stop
+#service smbd stop
+#service nmbd stop 
+#service winbind stop
+#service samba-ad-dc stop
 
 # Domain provision
 rm -fr /etc/samba/smb.conf
