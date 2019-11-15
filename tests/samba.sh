@@ -70,34 +70,36 @@ cd samba-4.11.2/
     --with-configdir=/etc/samba/ \
     --with-privatedir=/var/lib/samba/private \
 
-make && make install
+make -j 4 && make install
+
+export PATH=/usr/local/samba/bin/:/usr/local/samba/sbin/:$PATH
 
 # Samba must not be running during the provisioning
-#service smbd stop
-#service nmbd stop 
-#service winbind stop
-#service samba-ad-dc stop
+service smbd stop
+service nmbd stop 
+service winbind stop
+service samba-ad-dc stop
 
 # Domain provision
 rm -fr /etc/samba/smb.conf
-$(which samba-tool) domain provision --realm=LOCAL.DOMAIN --domain=LOCAL --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass='4dm1n_s3cr36_v3ry_c0mpl3x' --use-rfc2307 --use-ntvfs -d 1
+samba-tool domain provision --realm=LOCAL.DOMAIN --domain=LOCAL --server-role=dc --dns-backend=SAMBA_INTERNAL --adminpass='4dm1n_s3cr36_v3ry_c0mpl3x' --use-rfc2307 --use-ntvfs -d 1
 
 # Start samba-ad-dc service only
 rm -fr /etc/systemd/system/samba-ad-dc.service
 service samba-ad-dc start
 
 # Add users and groups
-$(which samba-tool) user create user1 --use-username-as-cn --surname=Test1 --given-name=User1 --random-password
-$(which samba-tool) user create user2 --use-username-as-cn --surname=Test2 --given-name=User2 --random-password
-$(which samba-tool) user create user3 --use-username-as-cn --surname=Test3 --given-name=User3 --random-password
-$(which samba-tool) user create user4 --use-username-as-cn --surname=Test4 --given-name=User4 --random-password
-$(which samba-tool) user create user5 --use-username-as-cn --surname=Test5 --given-name=User5 --random-password
+samba-tool user create user1 --use-username-as-cn --surname=Test1 --given-name=User1 --random-password
+samba-tool user create user2 --use-username-as-cn --surname=Test2 --given-name=User2 --random-password
+samba-tool user create user3 --use-username-as-cn --surname=Test3 --given-name=User3 --random-password
+samba-tool user create user4 --use-username-as-cn --surname=Test4 --given-name=User4 --random-password
+samba-tool user create user5 --use-username-as-cn --surname=Test5 --given-name=User5 --random-password
 
 # Add some groups
-$(which samba-tool) group add IT
-$(which samba-tool) group add Admins
-$(which samba-tool) group add Devs
-$(which samba-tool) group add DevOps
+samba-tool group add IT
+samba-tool group add Admins
+samba-tool group add Devs
+samba-tool group add DevOps
 
 # Create members
 $(which samba-tool) group addmembers IT Admins,Devs,DevOps,user1
