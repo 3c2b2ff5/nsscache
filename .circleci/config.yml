@@ -8,10 +8,19 @@ jobs:
     steps:
       - checkout
       - run: apt-get update && apt-get -y install sudo
-      - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
-      - run: sudo pip install pipenv
-      - run: pipenv install
-      - run: pipenv run python runtests.py -vvv
+      - run:
+        command: |
+          sudo apt-get update -qq
+          sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
+          pip install . --user
+          pip install -r requirements.txt --user
+          pip install yapf --user
+      - run:
+        name: Running tests
+        command: |
+          #sudo bash tests/samba.sh
+          python3 runtests.py -vvv
+          python3 setup.py install --root=/tmp/nsscache
       - run: sudo tests/samba.sh
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
