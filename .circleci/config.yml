@@ -7,6 +7,7 @@ jobs:
       - image: amd64/debian
     steps:
       - checkout
+      - run: apt-get update && apt-get -y install sudo
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
       - run: sudo pip install pipenv
       - run: pipenv install
