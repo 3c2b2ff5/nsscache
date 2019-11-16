@@ -2,9 +2,6 @@ version: 2.1
 
 jobs:
   build:
-    branches:
-      only:
-        - CircleCi
     working_directory: ~/nsscache
     docker:
       - image: amd64/debian
