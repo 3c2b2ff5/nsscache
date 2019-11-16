@@ -9,11 +9,17 @@ jobs:
       - checkout
       - run: apt-get update && apt-get -y install sudo
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
-      - run: pip install . --user
       - run: pip install -r requirements.txt --user
       - run: pip install yapf --user
-      - run: python3 runtests.py -vvv
-      - run: python3 setup.py install --root=/tmp/nsscache
+      - run: export PATH=$PATH:$(python -m site --user-base)/bin
+      - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+      - run: pip install --user .
+      - run: sudo apt install -y slapd ldap-utils libnss-db db-util
+      - run: debian/tests/regtest
+      - run:
+          command: yapf --diff --recursive nss_cache nsscache
+          no_output_timeout: 20m
+      - run: pylint nsscache nss_cache || true
       - run: sudo tests/samba.sh
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
