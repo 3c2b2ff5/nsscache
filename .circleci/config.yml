@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/nsscache
     docker:
-      - image: amd64/debian
+      - image: python/3.8.0-buster
     steps:
       - checkout
       - run: apt-get update && apt-get -y install sudo
