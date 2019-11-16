@@ -24,13 +24,13 @@ format created here.
 __author__ = ('jaq@google.com (Jamie Wilkinson)',
               'vasilios@google.com (Vasilios Hoffman)')
 
+import configparser
 import errno
 import os.path
 import re
 import shutil
 import stat
 import sys
-from configparser import ConfigParser
 
 from nss_cache import config
 from nss_cache import error
@@ -43,7 +43,7 @@ def LongestLength(l):
 
 
 # Load suffix config variables
-parser = ConfigParser()
+parser = configparser.ConfigParser()
 for i in sys.argv:
     if ('nsscache.conf') in i:
         # Remove '--config-file=' from the string
@@ -55,8 +55,8 @@ for i in sys.argv:
     else:
         # Config in nsscache folder
         parser.read('nsscache.conf')
-prefix = parser.get('suffix', 'prefix')
-suffix = parser.get('suffix', 'suffix')
+prefix = parser.get('suffix', 'prefix', fallback='')
+suffix = parser.get('suffix', 'suffix', fallback='')
 
 
 def RegisterAllImplementations(register_callback):
@@ -431,7 +431,7 @@ class FilesShadowMapHandler(FilesCache):
 class FilesNetgroupMapHandler(FilesCache):
     """Concrete class for updating a nss_files module netgroup cache."""
     CACHE_FILENAME = 'netgroup'
-    _TUPLE_RE = re.compile('^\((.*?),(.*?),(.*?)\)$')  # Do this only once.
+    _TUPLE_RE = re.compile(r'^\((.*?),(.*?),(.*?)\)$')  # Do this only once.
 
     def __init__(self, conf, map_name=None, automount_mountpoint=None):
         if map_name is None:
