@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/nsscache
     docker:
-      - image: python/3.8.0-buster
+      - image: python/buster
     steps:
       - checkout
       - run: apt-get update && apt-get -y install sudo
