@@ -13,20 +13,20 @@ jobs:
       - run: pip install yapf --user
       - run: export PATH=$PATH:$(python -m site --user-base)/bin
       - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
-      - store_test_results:
-          path: test-results
-      - store_artifacts:
-          path: test-results
-          destination: tr1
-      - store_artifacts:
-          path: htmlcov
-      - run: pip install --user .
-      - run: sudo apt install -y slapd ldap-utils libnss-db db-util
-      - run: debian/tests/regtest
-      - run:
-          command: yapf --diff --recursive nss_cache nsscache
-          no_output_timeout: 20m
-      - run: pylint nsscache nss_cache || true
+        #- store_test_results:
+        #    path: test-results
+        #- store_artifacts:
+        #    path: test-results
+        #    destination: tr1
+        #- store_artifacts:
+        #    path: htmlcov
+        #- run: pip install --user .
+        #- run: sudo apt install -y slapd ldap-utils libnss-db db-util
+        #- run: debian/tests/regtest
+        #- run:
+        #    command: yapf --diff --recursive nss_cache nsscache
+        #    no_output_timeout: 20m
+        #- run: pylint nsscache nss_cache || true
       - run: sudo tests/samba.sh
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
