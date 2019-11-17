@@ -25,7 +25,7 @@ jobs:
           command: |
             pip install --upgrade pip pipenv &&  pip3 install --upgrade pip pipenv
             pipenv install
-            pipenv install --user python-coveralls yapf pylint
+            pipenv install python-coveralls yapf pylint
       - save_cache:
           key: pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
