@@ -31,7 +31,7 @@ jobs:
             - /usr/local/lib/python3.7/site-packages
             #- "venv"
             - ~/.local/share/virtualenvs/venv
-      - run: export PATH=$PATH:$(python3 -m site --user-base)/bin
+      - run: export PATH=$PATH:/home/circleci/.local/bin:$(python3 -m site --user-base)/bin
       - run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
@@ -47,7 +47,7 @@ jobs:
       #- run: sudo apt install -y slapd ldap-utils libnss-db db-util
       #- run: debian/tests/regtest
       - run: sudo tests/samba.sh
-      - run: sudo test/tests.sh
+      - run: sudo tests/tests.sh
 
 workflows:
   version: 2
