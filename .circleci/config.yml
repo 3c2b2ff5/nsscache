@@ -49,7 +49,7 @@ jobs:
             pipenv install .
             sudo apt install -y slapd ldap-utils libnss-db db-util
             #pipenv run debian/tests/regtest
-            pipenv tests/samba.sh
+            pipenv run tests/samba.sh
       - run:
           command: | 
             pipenv yapf --diff --recursive nss_cache nsscache
