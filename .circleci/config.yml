@@ -47,8 +47,7 @@ jobs:
       #- run: sudo apt install -y slapd ldap-utils libnss-db db-util
       #- run: debian/tests/regtest
       - run: sudo tests/samba.sh
-      - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
-      - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
+      - run: sudo test/tests.sh
 
 workflows:
   version: 2
