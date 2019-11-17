@@ -24,21 +24,20 @@ jobs:
           key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           command: |
-            #pip install --user --upgrade setuptools wheel
             python3 -m venv venv
             . venv/bin/activate
-            pip install --user --upgrade pip
-            pip install --user -r requirements.txt
-            pip install --user python-coveralls yapf pylint
+            sudo python -m pip install --user --upgrade pip
+            python -m pip install --user -r requirements.txt
+            python -m pip install --user python-coveralls yapf pylint
       - save_cache:
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             - /home/circleci/nsscache/.venv
             - /usr/local/bin
             - /usr/local/lib/python3.7/site-packages
-            #- "venv"
-            #- ~/.local/share/virtualenvs/venv
-          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      #- run: export PATH=$PATH:$(python3 -m site --user-base)/bin
+            - "venv"
+            - ~/.local/share/virtualenvs/venv
+      - run: export PATH=$PATH:$(python3 -m site --user-base)/bin
       - run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
