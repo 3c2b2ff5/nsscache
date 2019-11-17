@@ -10,6 +10,8 @@ jobs:
       - run:
           name: "Set Python Version"
           command: pyenv global 3.7.0
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       # Install C libraries before pip install.
       - run: sudo apt-get -qq update
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
