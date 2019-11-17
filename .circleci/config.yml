@@ -38,7 +38,7 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run: sudo python3 -m pip install .
+      - run: sudo python -m pip install .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
       #- run: sudo tests/samba.sh
