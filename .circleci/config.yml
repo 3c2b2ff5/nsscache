@@ -1,23 +1,17 @@
-version: 2.1
-
-orbs:
-  python: circleci/python@0.2.1
+version: 2
 
 jobs:
   build:
-    executor:
-      name: "python/default"
-      tag: "3.7"
+    machine:
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
       # Install C libraries before pip install.
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
-      - python/load-cache
-      - python/install-deps
+      - pip install --user -r requirements.txt
       # CI-only deps, not in requirements.txt
       - run: pip install --user python-coveralls yapf pylint
       - run: export PATH=$PATH:$(python -m site --user-base)/bin
-      - python/save-cache
       - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       #- run:
       #    command: coveralls
@@ -32,6 +26,7 @@ jobs:
       - run: pip install --user .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
+      - run: sudo tests/samba.sh
       - run:
           command: yapf --diff --recursive nss_cache nsscache
           no_output_timeout: 20m

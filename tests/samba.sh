@@ -2,21 +2,15 @@
 
 export DEBIAN_FRONTEND=noninteractive
 
+# Install needed packages
 apt-get update
 
-PACKAGES=(
-'acl'
-'attr'
-'samba'
-'samba-dsdb-modules'
-'samba-vfs-modules'
-'winbind'
-)
-
-# Install needed packages
-for package in "${PACKAGES[@]}"; do
-    apt-get -y install "$package"
-done
+apt-get -y install \
+    acl \
+    attr \
+    samba \
+    winbind \
+    dnsutils \
 
 # Samba must not be running during the provisioning
 service smbd stop
