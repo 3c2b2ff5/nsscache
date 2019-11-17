@@ -45,10 +45,9 @@ jobs:
           path: htmlcov
       - run:
           command: |
-            export PATH=$PATH:$(python3 -m site --user-base)/bin:/home/circleci/.local/bin
+            export PATH=$PATH:$(python3 -m site --user-base)/bin
             python -m pip install --user --upgrade pip setuptools wheel
-            pip install --user .
-        #- run: pip install --user .
+      - run: pip install --user .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
       - run: sudo tests/samba.sh
