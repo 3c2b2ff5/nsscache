@@ -38,9 +38,8 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run: sudo pip install --user .
+      - run: sudo pip install . --target /usr/lib/python3/dist-packages/
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
-      - run: export PATH=$PATH:/home/circleci/.local/bin
       - run: debian/tests/regtest
       #- run: sudo tests/samba.sh
 
