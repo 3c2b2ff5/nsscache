@@ -38,7 +38,7 @@ jobs:
             - /usr/local/lib/python3.7/site-packages
             - "venv"
             - ~/.local/share/virtualenvs/venv
-      #- run: export PATH=$PATH:$(python3 -m site --user-base)/bin
+      - run: export PATH=$PATH:$(python3 -m site --user-base)/bin
       - run: pipenv run python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
