@@ -50,7 +50,12 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run: sudo pip install --user .
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --user .
+      #- run: sudo pip install --user .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
       #- run: sudo tests/samba.sh
