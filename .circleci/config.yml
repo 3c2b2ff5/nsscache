@@ -15,19 +15,31 @@ jobs:
           name: "Set Python Version"
           command: pyenv global 3.7.0
       # Install C libraries before pip install.
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - run: sudo apt-get -qq update
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
       ## CI-only deps, not in requirements.txt
       - restore_cache:
           keys:
-          - pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run: pip install --user -r requirements.txt
-      - run: pip install --user python-coveralls yapf pylint
+          - deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          command: |
+            pip install --upgrade pip pipenv &&  pip3 install --upgrade pip pipenv
+            #sudo pip install pipenv
+            pipenv install
+            pipenv shell
+      #- run: pip install --user -r requirements.txt
+      #- run: pip install --user python-coveralls yapf pylint
       - save_cache:
-          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
-            - ~/nsscache
-      - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+            - ".venv"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.7/site-packages"
+      - run: 
+          command: |
+            pipenv run python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
       ##    when: always
@@ -38,9 +50,11 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run: sudo pip install .
-      - run: sudo apt install -y slapd ldap-utils libnss-db db-util
-      - run: debian/tests/regtest
+      - run: 
+          command: |
+            pipenv install .
+            sudo apt install -y slapd ldap-utils libnss-db db-util
+            debian/tests/regtest
       #- run: sudo tests/samba.sh
 
 workflows:
