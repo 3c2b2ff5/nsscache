@@ -4,9 +4,7 @@ jobs:
   build:
     working_directory: ~/nsscache
     machine:
-      - image: ubuntu-1604:201903-01
-        environment:
-          PIPENV_VENV_IN_PROJECT: true
+      image: ubuntu-1604:201903-01
     steps:
       - checkout
       - run:
