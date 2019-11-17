@@ -24,12 +24,6 @@ jobs:
       ## CI-only deps, not in requirements.txt
       - restore_cache:
           key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      #- run:
-      #    command: |
-      #      python3 -m venv venv
-      #      . venv/bin/activate
-      #      pip install -r requirements.txt
-      #      pip install python-coveralls yapf pylint
       - run: pip install --user -r requirements.txt
       - run: pip install --user python-coveralls yapf pylint
       - save_cache:
@@ -39,8 +33,7 @@ jobs:
             #- /usr/local/bin
             #- /usr/local/lib/python3.7/site-packages
             #- ~/.local/share/virtualenvs/venv
-            - "venv"
-      - run: export PATH=$PATH:$(python3 -m site --user-base)/bin
+      - run: export PATH=$PATH:$(python -m site --user-base)/bin
       - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
@@ -52,10 +45,8 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run: export PATH=$PATH:$(python -m site --user-base)/bin
       - run: sudo pip install .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
-      - run: export PATH=$PATH:$(python -m site --user-base)/bin
       - run: debian/tests/regtest
       #- run: sudo tests/samba.sh
 
