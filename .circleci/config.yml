@@ -14,7 +14,7 @@ jobs:
           name: install/update pip pipenv
           command: |
             sudo python -m pip install --upgrade pip setuptools wheel
-            sudo python -m pip install pipenv
+            #sudo python -m pip install pipenv
       # Install C libraries before pip install.
       - run: sudo apt-get -qq update
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
@@ -44,10 +44,9 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      #- run: sudo -E -H $(which pip) install --user .
-      - run: pipenv install
+      - run: sudo -E -H $(which pip) install .
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
-      - run: debian/tests/regtest
+      - run: sudo debian/tests/regtest
       - run: sudo tests/samba.sh
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
