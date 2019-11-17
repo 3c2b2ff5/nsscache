@@ -48,7 +48,15 @@ jobs:
           command: |
             pipenv install .
             sudo apt install -y slapd ldap-utils libnss-db db-util
-            pipenv run debian/tests/regtest
+            #pipenv run debian/tests/regtest
+            pipenv tests/samba.sh
+      - run:
+          command: | 
+            pipenv yapf --diff --recursive nss_cache nsscache
+          no_output_timeout: 20m
+      - run:
+          command: |
+            pipenv pylint nsscache nss_cache || true
       #- run: sudo tests/samba.sh
 
 workflows:
