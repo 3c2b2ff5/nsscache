@@ -13,32 +13,26 @@ jobs:
       - run:
           name: install/update pip pipenv
           command: |
-            sudo python -m pip install --upgrade pip setuptools wheel
-            #sudo python -m pip install pipenv
+            sudo python3 -m pip install --upgrade pip setuptools wheel
       # Install C libraries before pip install.
       - run: sudo apt-get -qq update
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
       ## CI-only deps, not in requirements.txt
       - restore_cache:
           key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+      - save_cache:
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - ~/.local/share/virtualenvs/venv
       - run:
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install --user -r requirements.txt
-      - save_cache:
-          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - ~/.local/share/virtualenvs/venv
-      - run: pip install --user python-coveralls yapf pylint
-      - run: pip install --user .
-      - run: sudo apt install -y slapd ldap-utils libnss-db db-util
-      - run: debian/tests/regtest
-      - run: sudo tests/samba.sh
-      - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
-      - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
-      - run: export PATH=$PATH:$(python3 -m site --user-base)/bin
-      - run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+            pip install --user python-coveralls yapf pylint
+            export PATH=$PATH:$(python -m site --user-base)/bin
+            python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+        #- run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
       ##    when: always
@@ -49,6 +43,16 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install --user .
+            sudo apt install -y slapd ldap-utils libnss-db db-util
+            debian/tests/regtest
+            sudo tests/samba.sh
+            sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
+            sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
 
 workflows:
   version: 2
