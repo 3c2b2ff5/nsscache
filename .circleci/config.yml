@@ -8,7 +8,7 @@ jobs:
       - checkout
       # Install C libraries before pip install.
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
-      - pip install --user -r requirements.txt
+      - run: pip install --user -r requirements.txt
       # CI-only deps, not in requirements.txt
       - run: pip install --user python-coveralls yapf pylint
       - run: export PATH=$PATH:$(python -m site --user-base)/bin
