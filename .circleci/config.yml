@@ -28,7 +28,7 @@ jobs:
             pip install --upgrade pip pipenv &&  pip3 install --upgrade pip pipenv
             #sudo pip install pipenv
             pipenv install
-      -run: pipenv shell
+      - run: pipenv shell
       #- run: pip install --user -r requirements.txt
       #- run: pip install --user python-coveralls yapf pylint
       - save_cache:
