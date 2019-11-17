@@ -30,7 +30,7 @@ jobs:
             - /usr/local/bin
             - /usr/local/lib/python3.7/site-packages
             #- "venv"
-            #- ~/.local/share/virtualenvs/venv
+            - ~/.local/share/virtualenvs/venv
       - run: export PATH=$PATH:$(python3 -m site --user-base)/bin
       - run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
@@ -43,13 +43,9 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run:
-          command: |
-            export PATH=$PATH:$(python3 -m site --user-base)/bin
-            python -m pip install --user --upgrade pip setuptools wheel
-      - run: pip install --user .
-      - run: sudo apt install -y slapd ldap-utils libnss-db db-util
-      - run: debian/tests/regtest
+      - run: sudo pip install --user .
+      #- run: sudo apt install -y slapd ldap-utils libnss-db db-util
+      #- run: debian/tests/regtest
       - run: sudo tests/samba.sh
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
       - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
