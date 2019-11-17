@@ -28,8 +28,7 @@ jobs:
             . venv/bin/activate
             pip install --user --upgrade pip
             pip install pipenv
-            pipenv install -r requirements.txt
-            pipenv install python-coveralls yapf pylint
+            pipenv install
       - save_cache:
           key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
