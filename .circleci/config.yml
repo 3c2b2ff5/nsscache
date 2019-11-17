@@ -13,7 +13,6 @@ jobs:
       - run: sudo pip install pipenv
       - run: pipenv install
       # CI-only deps, not in requirements.txt
-      - run: pip install --user python-coveralls yapf pylint
       - run: export PATH=$PATH:$(python -m site --user-base)/bin
       - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       #- run:
@@ -30,10 +29,6 @@ jobs:
       - run: sudo apt install -y slapd ldap-utils libnss-db db-util
       - run: debian/tests/regtest
       - run: sudo tests/samba.sh
-      - run:
-          command: yapf --diff --recursive nss_cache nsscache
-          no_output_timeout: 20m
-      - run: pylint nsscache nss_cache || true
 
 workflows:
   version: 2
