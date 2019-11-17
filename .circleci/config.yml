@@ -13,7 +13,7 @@ jobs:
       - run:
           name: install/update pip pipenv
           command: |
-            sudo python3 -m pip install --upgrade pip setuptools wheel
+            sudo python -m pip install --upgrade pip setuptools wheel
       # Install C libraries before pip install.
       - run: sudo apt-get -qq update
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
@@ -31,7 +31,7 @@ jobs:
             pip install --user -r requirements.txt
             pip install --user python-coveralls yapf pylint
             export PATH=$PATH:$(python -m site --user-base)/bin
-            python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+            python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
         #- run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
