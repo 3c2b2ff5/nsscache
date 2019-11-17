@@ -26,9 +26,7 @@ jobs:
       - run:
           command: |
             pip install --upgrade pip pipenv &&  pip3 install --upgrade pip pipenv
-            #sudo pip install pipenv
             pipenv install
-      - run: pipenv shell
       #- run: pip install --user -r requirements.txt
       #- run: pip install --user python-coveralls yapf pylint
       - save_cache:
@@ -54,7 +52,7 @@ jobs:
           command: |
             pipenv install .
             sudo apt install -y slapd ldap-utils libnss-db db-util
-            debian/tests/regtest
+            pipenv run debian/tests/regtest
       #- run: sudo tests/samba.sh
 
 workflows:
