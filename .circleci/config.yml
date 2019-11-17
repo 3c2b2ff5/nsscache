@@ -8,6 +8,10 @@ jobs:
     steps:
       - checkout
       - run:
+        command: |
+          echo 'export PATH=$PATH:$(python3 -m site --user-base)/bin' >> $BASH_ENV
+          source /home/circleci/.bashrc
+      - run:
           name: "Set Python Version"
           command: pyenv global 3.7.0
       # Install C libraries before pip install.
@@ -21,18 +25,16 @@ jobs:
             python -m pip install --user --upgrade pip setuptools wheel
             python3 -m venv venv
             . venv/bin/activate
-            export PATH=$PATH:/home/circleci/.local/bin:$(python3 -m site --user-base)/bin
             pip install --user -r requirements.txt
             pip install --user python-coveralls yapf pylint
       - save_cache:
-          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
           paths:
             #- /home/circleci/nsscache/.venv
             #- /usr/local/bin
             #- /usr/local/lib/python3.7/site-packages
             #- "venv"
             - ~/.local/share/virtualenvs/venv
-      - run: export PATH=$PATH:/home/circleci/.local/bin:$(python3 -m site --user-base)/bin
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
@@ -44,10 +46,7 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run:
-          command: |
-            export PATH=$PATH:/home/circleci/.local/bin:$(python3 -m site --user-base)/bin
-            pip install --user .
+      - run: pip install --user .
       #- run: sudo apt install -y slapd ldap-utils libnss-db db-util
       #- run: debian/tests/regtest
       #- run: sudo tests/samba.sh
