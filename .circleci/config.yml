@@ -7,27 +7,30 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-        #      # Install C libraries before pip install.
-        #      - run: sudo apt-get -qq update
-        #      - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
-        #      - run: sudo pip install pipenv
-        #      - run: pipenv install
-        #      # CI-only deps, not in requirements.txt
-        #      - run: export PATH=$PATH:$(python -m site --user-base)/bin
-        #      - run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
-        #      #- run:
-        #      #    command: coveralls
-        #      #    when: always
-        #      - store_test_results:
-        #          path: test-results
-        #      - store_artifacts:
-        #          path: test-results
-        #          destination: tr1
-        #      - store_artifacts:
-        #          path: htmlcov
-        #      - run: pip install --user .
-        #      - run: sudo apt install -y slapd ldap-utils libnss-db db-util
-        #      - run: debian/tests/regtest
+      - run:
+          name: "Set Python Version"
+          command: pyenv global 3.7.0
+      # Install C libraries before pip install.
+      #- run: sudo apt-get -qq update
+      #- run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
+      #- run: sudo pip install pipenv
+      #- run: pipenv install
+      ## CI-only deps, not in requirements.txt
+      #- run: export PATH=$PATH:$(python -m site --user-base)/bin
+      #- run: python setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+      ##- run:
+      ##    command: coveralls
+      ##    when: always
+      #- store_test_results:
+      #    path: test-results
+      #- store_artifacts:
+      #    path: test-results
+      #    destination: tr1
+      #- store_artifacts:
+      #    path: htmlcov
+      #- run: pip install --user .
+      #- run: sudo apt install -y slapd ldap-utils libnss-db db-util
+      #- run: debian/tests/regtest
       - run: sudo tests/samba.sh
 
 workflows:
