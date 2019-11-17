@@ -8,9 +8,10 @@ jobs:
     steps:
       - checkout
       - run:
-        command: |
-          echo 'export PATH=$PATH:$(python3 -m site --user-base)/bin' >> $BASH_ENV
-          source /home/circleci/.bashrc
+          name: Make PATH available globally
+          command: |
+            echo 'export PATH=$PATH:$(python3 -m site --user-base)/bin' >> $BASH_ENV
+            source /home/circleci/.bashrc
       - run:
           name: "Set Python Version"
           command: pyenv global 3.7.0
