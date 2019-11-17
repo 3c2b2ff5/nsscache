@@ -5,34 +5,33 @@ jobs:
     working_directory: ~/nsscache
     machine:
       image: ubuntu-1604:201903-01
+    environment:
+      PATH: $PATH:/home/circleci/.local/bin:$(python3 -m site --user-base)/bin
     steps:
       - checkout
       - run:
           name: "Set Python Version"
           command: pyenv global 3.7.0
-      - run:
-          name: install/update pip pipenv
-          command: |
-            sudo python -m pip install --upgrade pip setuptools wheel
       # Install C libraries before pip install.
       - run: sudo apt-get -qq update
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
       ## CI-only deps, not in requirements.txt
       - restore_cache:
-          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - save_cache:
-          key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-          paths:
-            - ~/.local/share/virtualenvs/venv
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
       - run:
           command: |
+            python -m pip install --user --upgrade pip setuptools wheel
             python3 -m venv venv
             . venv/bin/activate
             pip install --user -r requirements.txt
             pip install --user python-coveralls yapf pylint
-            export PATH=$PATH:$(python -m site --user-base)/bin
-            python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
-        #- run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "requirements.txt" }}
+          paths:
+            - "venv"
+            #- ~/.local/share/virtualenvs/venv
+      #- run: export PATH=$PATH:$(python3 -m site --user-base)/bin
+      - run: python3 setup.py test --addopts "-v --durations=0 --junitxml=test-results/junit.xml --cov=nss_cache --cov-report term-missing --cov-report html"
       ##- run:
       ##    command: coveralls
       ##    when: always
@@ -43,16 +42,12 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run:
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install --user .
-            sudo apt install -y slapd ldap-utils libnss-db db-util
-            debian/tests/regtest
-            sudo tests/samba.sh
-            sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
-            sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
+      - run: pip install --user .
+      - run: sudo apt install -y slapd ldap-utils libnss-db db-util
+      - run: debian/tests/regtest
+      - run: sudo tests/samba.sh
+      - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug verify
+      - run: sudo $(which python3) $(which nsscache) -c tests/nsscache.conf --debug update --full
 
 workflows:
   version: 2
