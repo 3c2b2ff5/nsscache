@@ -20,14 +20,14 @@ jobs:
       ## CI-only deps, not in requirements.txt
       - restore_cache:
           keys:
-          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           command: |
             pip install --upgrade pip pipenv &&  pip3 install --upgrade pip pipenv
             pipenv install
             pipenv install --user python-coveralls yapf pylint
       - save_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
             - ".venv"
             - "/opt/circleci/.pyenv/versions/3.7.0/lib/python3.7/site-packages"
