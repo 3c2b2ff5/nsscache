@@ -4,7 +4,9 @@ jobs:
   build:
     working_directory: ~/nsscache
     machine:
-      image: ubuntu-1604:201903-01
+      - image: ubuntu-1604:201903-01
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
     steps:
       - checkout
       - run:
@@ -16,12 +18,12 @@ jobs:
       ## CI-only deps, not in requirements.txt
       - restore_cache:
           key: pip-packages-v1-{{ .Branch }}-{{ checksum "requirements.txt" }}
-      - run: export PATH=$PATH:/home/circleci/.local/bin:$(python3 -m site --user-base)/bin
       - run:
           command: |
             python -m pip install --user --upgrade pip setuptools wheel
             python3 -m venv venv
             . venv/bin/activate
+            export PATH=$PATH:/home/circleci/.local/bin:$(python3 -m site --user-base)/bin
             pip install --user -r requirements.txt
             pip install --user python-coveralls yapf pylint
       - save_cache:
@@ -44,7 +46,10 @@ jobs:
           destination: tr1
       - store_artifacts:
           path: htmlcov
-      - run: pip install --user .
+      - run:
+          command: |
+            export PATH=$PATH:/home/circleci/.local/bin:$(python3 -m site --user-base)/bin
+            pip install --user .
       #- run: sudo apt install -y slapd ldap-utils libnss-db db-util
       #- run: debian/tests/regtest
       #- run: sudo tests/samba.sh
