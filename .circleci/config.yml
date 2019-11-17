@@ -12,18 +12,11 @@ jobs:
           command: |
             echo 'export PATH=$PATH:/home/circleci/.local/bin' >> $BASH_ENV
       - run:
-          name: update pyenv
-          command: |
-            # Install pyenv-update to allow addition of python 3.7.0
-            git clone git://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update
-            pyenv update
-            pyenv install 3.7.0
-      - run:
           name: "Set Python Version"
           command: pyenv global 3.7.0
       # Install C libraries before pip install.
-      - run: sudo chown -R circleci:circleci /usr/local/bin
-      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
+      #- run: sudo chown -R circleci:circleci /usr/local/bin
+      #- run: sudo chown -R circleci:circleci /usr/local/lib/python3.7/site-packages
       - run: sudo apt-get -qq update
       - run: sudo apt-get install -y libnss-db libdb-dev libcurl4-gnutls-dev libgnutls28-dev libldap2-dev libsasl2-dev
       ## CI-only deps, not in requirements.txt
