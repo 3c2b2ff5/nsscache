@@ -47,7 +47,7 @@ jobs:
       #- run: sudo apt install -y slapd ldap-utils libnss-db db-util
       #- run: debian/tests/regtest
       - run: sudo tests/samba.sh
-      - run: sudo tests/tests.sh
+      - run: tests/tests.sh
 
 workflows:
   version: 2
